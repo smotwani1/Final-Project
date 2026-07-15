@@ -39,6 +39,7 @@ Indian credit card rewards are structured to be unusable at the moment of decisi
 ### F1 — My Wallet
 - Card picker rendered from `cards.json`-style data embedded in JS (static site, so data ships in a JS file).
 - Wallet persists in localStorage; survives refresh and revisit; removable per card; "reset all" available.
+- Points cards show a "Transfer partners" detail (partner + ratio list from card data) — **informational only in v1**; the recommendation maths keeps using the single disclosed `pointValueINR`.
 - **Accept when:** add/remove works, wallet persists after closing the browser, empty-wallet state prompts setup.
 
 ### F2 — Best Card Finder
@@ -62,6 +63,12 @@ Indian credit card rewards are structured to be unusable at the moment of decisi
 ### F5 — Custom card builder (stretch — build only if F1–F4 are done and deployed)
 - Form: name, reward type, base rate, up to 2 accelerated rules (merchants, rate, monthly cap), exclusions. Saved to localStorage alongside database cards.
 
+### F6 — EMI reality check (stretch — from peer feedback; build only after F1–F4 ship)
+- Inputs: purchase amount, tenure (3/6/9/12/18/24 mo), annual interest rate (editable, default ~15%), processing fee, "No Cost EMI?" toggle.
+- Math: `EMI = P × r × (1+r)^n / ((1+r)^n − 1)` where `r` = annual rate / 12 / 100. Total outgo = EMIs + processing fee + 18% GST on interest and fee. No Cost EMI mode: interest offset by upfront discount, but GST on interest + processing fee + forfeited rewards still shown.
+- Output: total cost vs. paying in full, effective extra cost in ₹ and %, one-line verdict.
+- **Accept when:** results match a hand-worked example (e.g., ₹30,000 over 6 months at 15%) to the rupee.
+
 ## 6. Card database
 
 Ships as a JS array. Every rate is **indicative and must be re-verified against the bank's current product page/MITC before Demo Day** — Indian issuers devalue frequently (multiple caps/devaluations announced in 2026 alone). Each card carries a `lastVerified` date shown in the UI.
@@ -83,6 +90,8 @@ Ships as a JS array. Every rate is **indicative and must be re-verified against 
       categories: [], ratePct: 5.0, monthlyCapINR: 1000, capBasis: "reward" }
   ],
   exclusions: ["fuel","rent","wallet"],
+  transferPartners: [],       // points cards only, informational in v1:
+                              // e.g. [{ partner: "Air India Maharaja", ratio: "1:1" }]
   feeINR: 1000,
   lastVerified: "2026-07-16",
   notes: "Cashback as CashPoints; verify current partner list"
@@ -148,7 +157,7 @@ Empty wallet → route to setup. Amount blank → rank by rate, show per-₹100 
 | Fri 7/17 | localStorage wallet persistence done; deploy checkpoint; log entry |
 | Sat 7/18 | Recommendation engine + Best Card screen with ₹ math (F2 = demo-critical core) |
 | Sun 7/19 | Cap tracker + purchase logging (F3) |
-| Mon 7/20 | Estimator (F4); mobile polish; Dad test #1 — collect real feedback |
+| Mon 7/20 | Estimator (F4); mobile polish; Dad test #1 — collect real feedback; EMI check (F6) only if ahead of schedule |
 | Tue 7/21 | Fix feedback; README; feature freeze; rehearse 2-min demo |
 | Wed 7/22 | **Demo Day** |
 | Thu–Fri 7/23–24 | Weekly logs + AI-collaboration notes finalised; final commit; submission |
@@ -166,3 +175,5 @@ Empty wallet → route to setup. Amount blank → rank by rate, show per-₹100 
 2. One assumed ₹ value per points programme — where to source defensible defaults.
 3. How much UPI/RuPay logic v1 needs beyond the eligibility flag.
 4. Whether milestone-based benefits (Amex) are worth modelling or explicitly out of scope.
+5. *(Peer feedback)* EMI calculator: editable-inputs-only vs. per-bank interest/fee presets — presets need sourcing and verification, so v1 likely ships editable defaults.
+6. *(Peer feedback)* Transfer partners: where to source current partner lists + ratios per programme, and whether v2 should let users toggle point value between "cashback redemption" and "transfer redemption".
