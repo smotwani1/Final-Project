@@ -1,29 +1,40 @@
-# Final Project Proposal — Credit Card Rewards Maximiser (India Edition)
+# Final Project Proposal — Listing Ready
+
+**Course:** OIM3690, Babson College
+**Author:** Shiv Motwani
+**Live app:** _(GitHub Pages URL — added after deploy)_
 
 ## What I'm building
 
-A mobile-first web app that tells my dad which of his Indian credit cards to use for any purchase — factoring in the merchant-specific rewards, monthly caps, and category exclusions that make Indian cards genuinely hard to keep track of.
+**Listing Ready** is a mobile-friendly web app that helps a private-party car seller write a good listing fast. You type in your car's VIN, the app decodes the real factory specs from the free U.S. government NHTSA database, you add the handful of things only you know (mileage, price, condition), and it generates a clean, honest, copy-paste-ready listing description and title for Facebook Marketplace, Craigslist, or Autotrader.
 
 ## Who it's for / why I chose this
 
-My dad. He has multiple Indian credit cards and, like basically everyone I know there, defaults to the same card for everything. Indian cards are harder to optimise than US ones: rewards are tied to specific merchants instead of broad categories (there's a Swiggy card, an Amazon card, a Flipkart card, a Tata card), the accelerated rates come with monthly caps that silently stop paying once you cross them, whole categories like fuel, rent, and wallet loads are often excluded entirely, and banks devalue their reward structures multiple times a year. Nobody — including my dad — is tracking any of that while standing at a checkout.
+Anyone selling a used car themselves. When people sell privately they usually either (a) write a two-line listing that buyers don't trust ("2003 Honda, runs good, $8k"), or (b) stare at a blank box not knowing what details matter. Meanwhile the exact factory specs a buyer wants — trim, engine, drivetrain, transmission, body style — are all sitting inside the 17-character VIN, and there's a free government API that returns them. The gap is that nobody stitches "decode the VIN" and "write the listing" together. That's the whole product.
 
-I built a simple US-style card optimiser for Mini Project 2. This is a different product for a different market with fundamentally different mechanics (caps, exclusions, merchant-level rules, UPI-on-RuPay) — and this time I have a real user who will actually test it and tell me where it fails.
+I picked this because it's a real, narrow problem with a genuinely free, no-auth data source, and the value is obvious in a 60-second demo: paste a VIN, get a listing.
 
 ## Core features (3–5)
 
-1. **My Wallet** — pick your cards from a built-in database of ~10–12 popular Indian cards (HDFC Millennia, SBI Cashback, Amazon Pay ICICI, Axis Ace, Flipkart Axis, Tata Neu Infinity, Swiggy HDFC, Amex MRCC, etc.). Saved with localStorage — no login, wallet is still there next visit. Points cards also display their transfer partners and ratios (e.g., points → airline miles), so you can see what the points are actually worth beyond plain cashback redemption.
-2. **Best Card Finder** — pick where you're spending (Amazon, Flipkart, Swiggy/Zomato, groceries, fuel, utility bills, dining out, travel, UPI, everything else) plus a ₹ amount; the app ranks every card in the wallet and shows which one to use and the actual rupee value earned.
-3. **Cap tracker** — log a purchase with one tap after you use a card; the app tracks monthly spend against each card's caps and reroutes you when an accelerated rate runs out ("Millennia's 5% cap is done this month — use SBI Cashback instead"). This is the feature a simple optimiser doesn't have.
-4. **"Money left on the table" estimator** — enter rough monthly spend per category and see estimated annual rewards from current habits vs. always using the optimal card, in ₹.
-5. **(Stretch — from peer feedback) EMI reality check** — every card my dad has pushes "convert to EMI" and "No Cost EMI" offers. This tool shows the true total cost of an EMI conversion — interest + processing fee + 18% GST + rewards you forfeit — versus paying in full, using the standard EMI formula. Same theme as the rest of the app: money quietly left on the table.
+1. **VIN decode** — enter a 17-character VIN; the app validates it (17 chars, no I/O/Q) and calls the NHTSA vPIC `DecodeVinValues` endpoint. No API key, no backend.
+2. **Clear spec sheet** — the decoded year / make / model / trim / body style / engine / drivetrain / transmission / fuel are shown in a clean grid, with empty and "Not Applicable" fields hidden so it never looks broken.
+3. **Manual details** — a form for the things the VIN can't know: mileage, asking price, condition, title status, colors, number of owners, location, notable features, honest condition notes, and contact info.
+4. **Auto-generated listing** — the decoded specs and the manual fields are folded into a natural-language description plus a suggested title, with a one-click **Copy** button. Three tone options (Friendly / Concise / Detailed).
+5. **Graceful failure** — invalid VINs, VINs NHTSA can't decode, check-digit warnings, and network errors all show a clear, specific message instead of a blank screen.
 
-## What I don't know yet
+## Tech
 
-- **There's no API for Indian card reward data.** The rules live in bank MITC PDFs and change constantly — banks have announced fresh caps and devaluations as recently as this month. I'll hard-code a JSON database with a "last verified" date per card and accept that it needs manual maintenance.
-- **Point valuations and transfer partners.** Cashback is easy, but HDFC points are worth ₹0.30–₹1 depending on redemption, NeuCoins are ₹1, and transfer partners/ratios (points → airline miles or hotel points) shift often — one bank dropped a major hotel partner just this year. v1 will show partners and ratios as information, while the recommendation maths uses one disclosed, assumed ₹ value per programme.
-- **EMI terms vary by bank.** Interest (~13–16% p.a.), processing fees, and what "No Cost" actually waives all differ by issuer — I need to decide whether the calculator uses editable inputs or per-bank presets.
-- **How to model caps.** Statement cycle vs. calendar month, per-merchant vs. combined caps. I'll probably simplify to calendar month for v1 and say so clearly.
-- **UPI-on-RuPay.** Only RuPay cards earn rewards on UPI payments, which is huge in India. Might just be a flag per card, but I haven't designed it yet.
-- **localStorage for real state.** A structured wallet plus monthly counters that reset each month is more state than I've handled before.
-- **User testing across the demo deadline.** Getting my dad to actually use it for a few days before Demo Day and tell me honestly where it's confusing.
+Plain HTML, CSS, and vanilla JavaScript in a single `index.html`. No framework, no build step, no backend — it deploys as a static file to GitHub Pages. The only external dependency at runtime is the NHTSA API call, made client-side with `fetch`.
+
+## What I don't know yet / risks
+
+- **NHTSA data completeness varies by make and year.** Some VINs return a rich trim + engine; others return only make/model. The app is built to degrade gracefully (hide blanks), but I need to test across a spread of vehicles so the demo doesn't land on a sparse one.
+- **Check digits.** Real VINs have a check digit in position 9; the API flags a mismatch with a non-zero `ErrorCode`. I decided to still show whatever data comes back but warn the user, rather than hard-reject — a judgment call I want to confirm is the right one.
+- **Listing quality is subjective.** "Clean, copy-paste-ready" is a taste call. I'm using a sentence-assembly approach (not an LLM, to keep it free and offline-capable), so the phrasing is deterministic — I need a couple of people to read the output and tell me if it reads like a human wrote it.
+- **No persistence yet.** Right now nothing is saved between sessions. A stretch goal is `localStorage` so a half-finished listing survives a refresh.
+
+## Stretch goals (if time allows)
+
+- Save-in-progress with `localStorage`.
+- A "fair price" sanity hint based on year + mileage.
+- Export to a formatted block for specific platforms.
