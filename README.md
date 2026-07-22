@@ -49,7 +49,7 @@ VIN barcode plate** rendered in pure SVG beneath the VIN input.
 
 ## 🚀 Try it
 
-**Live:** _(GitHub Pages URL — add after enabling Pages)_
+**Live:** <https://smotwani1.github.io/Final-Project/>
 
 **Locally:** the app is a single static file. Either open `index.html` directly,
 or serve the folder (recommended, so the API call runs from an `http://` origin):

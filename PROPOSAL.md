@@ -2,7 +2,8 @@
 
 **Course:** OIM3690, Babson College
 **Author:** Shiv Motwani
-**Live app:** _(GitHub Pages URL — added after deploy)_
+**Live app:** <https://smotwani1.github.io/Final-Project/>
+**Repository:** <https://github.com/smotwani1/Final-Project>
 
 ## What I'm building
 
