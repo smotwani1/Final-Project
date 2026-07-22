@@ -1,0 +1,285 @@
+/* ============================================================
+   LISTING READY — window-sticker (Monroney label) aesthetic
+   OIM3690 final project. Plain HTML/CSS/JS, no build, no framework.
+   Design tokens: graphite + one accent (safety-yellow / "signal").
+   ============================================================ */
+:root{
+  --graphite-900:#14161A;   /* page */
+  --graphite-850:#181B20;
+  --graphite-800:#1E2228;   /* panels / sticker body */
+  --graphite-700:#282D34;   /* raised rows, inputs */
+  --graphite-650:#30363E;
+  --hairline:#3A424C;       /* thin rules between fields */
+  --hairline-soft:#2A3038;
+  --ink-100:#ECEEF1;        /* primary text */
+  --ink-300:#9BA3AD;        /* labels / secondary */
+  --ink-500:#6A727C;        /* faint */
+  --signal:#E9B949;         /* THE accent — safety-yellow, used sparingly */
+  --signal-dim:#B99433;
+  --ok:#7FB36B;             /* semantic only, muted */
+  --bad:#D6685E;            /* semantic only, muted */
+  --plate:#C9CDD2;          /* brushed-silver VIN plate */
+  --plate-2:#AEB3B9;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --cond:'Oswald',Arial Narrow,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--mono);
+  background:var(--graphite-900);
+  color:var(--ink-100);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  font-size:14px;
+}
+/* subtle document texture behind the sheet */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 39px,rgba(255,255,255,.014) 39px 40px),
+    radial-gradient(1200px 600px at 50% -10%,rgba(233,185,73,.05),transparent 60%);
+  pointer-events:none;
+}
+.cond{font-family:var(--cond)}
+::selection{background:var(--signal);color:var(--graphite-900)}
+
+/* ---------- Focus (accessible) ---------- */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--signal);outline-offset:2px;
+}
+
+/* ---------- Document shell ---------- */
+.sheet{max-width:880px;margin:22px auto;padding:0 16px 64px}
+
+/* ---------- Masthead: the sticker header ---------- */
+.masthead{
+  border:1.5px solid var(--ink-300);
+  background:var(--graphite-800);
+}
+.masthead .topstrip{
+  background:var(--signal);color:var(--graphite-900);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:4px 12px;font-family:var(--cond);font-weight:600;
+  text-transform:uppercase;letter-spacing:.16em;font-size:.7rem;
+}
+.masthead .body{padding:16px 20px 18px;display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.masthead h1{
+  font-family:var(--cond);font-weight:700;text-transform:uppercase;
+  font-size:2.9rem;line-height:.92;letter-spacing:.01em;margin:0;color:var(--ink-100);
+}
+.masthead h1 .r{color:var(--signal)}
+.masthead .lede{color:var(--ink-300);font-size:.82rem;max-width:340px;margin:0 0 3px;line-height:1.45}
+.masthead .stamp{
+  margin-left:auto;text-align:right;font-family:var(--cond);text-transform:uppercase;
+  letter-spacing:.1em;color:var(--ink-500);font-size:.68rem;line-height:1.5;
+  border-left:1px solid var(--hairline);padding-left:14px;
+}
+
+/* ---------- Generic sticker section ---------- */
+.block{
+  border:1.5px solid var(--ink-300);border-top:none;
+  background:var(--graphite-800);
+}
+.block > .head{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 14px;border-bottom:1px solid var(--hairline);
+  background:var(--graphite-850);
+}
+.block > .head .idx{
+  font-family:var(--cond);font-weight:700;color:var(--graphite-900);background:var(--signal);
+  width:20px;height:20px;display:grid;place-items:center;font-size:.8rem;flex:0 0 auto;
+}
+.block > .head h2{
+  font-family:var(--cond);font-weight:600;text-transform:uppercase;letter-spacing:.13em;
+  font-size:.92rem;margin:0;color:var(--ink-100);
+}
+.block > .head .sub{
+  margin-left:auto;font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;
+  font-size:.66rem;color:var(--ink-500);
+}
+.pad{padding:16px 14px}
+.hint{color:var(--ink-500);font-size:.76rem;margin:0 0 12px;line-height:1.5}
+
+/* ---------- VIN input row ---------- */
+.vin-row{display:flex;gap:0;border:1px solid var(--hairline)}
+.vin-input{
+  flex:1 1 auto;min-width:0;border:none;background:var(--graphite-700);color:var(--ink-100);
+  font-family:var(--mono);font-weight:500;font-size:1.1rem;letter-spacing:.22em;
+  text-transform:uppercase;padding:13px 14px;
+}
+.vin-input::placeholder{color:var(--ink-500);letter-spacing:.14em}
+.vin-input:focus{outline:none;background:var(--graphite-650)}
+.vin-input.invalid{color:var(--bad)}
+button{font-family:var(--cond);cursor:pointer;border:none;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+button:disabled{opacity:.45;cursor:not-allowed}
+.btn-go{
+  background:var(--signal);color:var(--graphite-900);padding:0 22px;font-size:.95rem;
+  border-left:1px solid var(--hairline);white-space:nowrap;
+}
+.btn-go:hover:not(:disabled){background:#f2c65e}
+.vin-meta{display:flex;justify-content:space-between;align-items:center;margin-top:7px;min-height:18px}
+.linkbtn{
+  background:none;color:var(--signal);font-family:var(--cond);font-size:.76rem;letter-spacing:.08em;
+  text-transform:uppercase;padding:2px 0;text-decoration:none;border-bottom:1px dotted var(--signal-dim);
+}
+.linkbtn:hover{color:#f2c65e}
+.count{font-family:var(--mono);font-size:.74rem;color:var(--ink-500);font-variant-numeric:tabular-nums}
+.field-error{color:var(--bad);font-size:.76rem;margin-top:6px;min-height:16px;font-family:var(--mono)}
+
+/* ---------- Signature: brushed-silver VIN barcode plate ---------- */
+.plate{
+  margin-top:12px;border:1px solid #05060a;position:relative;
+  background:linear-gradient(180deg,#3a3f46 0 4px,var(--plate) 4px 100%);
+  padding:4px 0 0;display:none;box-shadow:0 1px 0 rgba(255,255,255,.06);
+}
+.plate.show{display:block}
+.plate .metal{
+  background:repeating-linear-gradient(90deg,var(--plate) 0 2px,var(--plate-2) 2px 3px);
+  padding:9px 12px 7px;
+}
+.plate svg{display:block;width:100%;height:46px}
+.plate svg rect{fill:#0c0e12}
+.plate .cap{
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  padding:5px 12px 6px;background:var(--plate);border-top:1px solid rgba(0,0,0,.25);
+}
+.plate .cap .vintext{
+  font-family:var(--mono);font-weight:600;letter-spacing:.34em;color:#101317;font-size:.9rem;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.plate .cap .mfr{
+  font-family:var(--cond);text-transform:uppercase;letter-spacing:.16em;color:#3a4048;
+  font-size:.6rem;flex:0 0 auto;
+}
+.plate .yellowedge{position:absolute;top:0;left:0;right:0;height:4px;
+  background:repeating-linear-gradient(90deg,var(--signal) 0 14px,#101317 14px 20px)}
+
+/* ---------- Status banners ---------- */
+.status{
+  border:1px solid var(--hairline);border-left-width:3px;padding:9px 12px;font-size:.8rem;
+  margin-top:14px;display:none;gap:9px;align-items:flex-start;font-family:var(--mono);
+}
+.status.show{display:flex}
+.status.loading{border-left-color:var(--signal);color:var(--ink-300);background:var(--graphite-850)}
+.status.error{border-left-color:var(--bad);color:#eaa59d;background:rgba(214,104,94,.07)}
+.status.warn{border-left-color:var(--signal);color:var(--signal);background:rgba(233,185,73,.06)}
+.spin{width:13px;height:13px;border:2px solid var(--signal);border-top-color:transparent;border-radius:50%;
+  animation:spin .7s linear infinite;flex:0 0 auto;margin-top:1px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- Spec sheet (label/value rows, hairlines) ---------- */
+.veh-title{font-family:var(--cond);font-weight:700;text-transform:uppercase;font-size:1.6rem;
+  letter-spacing:.01em;line-height:1;margin:0 0 3px}
+.veh-sub{font-family:var(--cond);text-transform:uppercase;letter-spacing:.14em;color:var(--ink-500);
+  font-size:.72rem;margin:0 0 14px}
+.specs{border-top:1px solid var(--hairline)}
+.srow{display:grid;grid-template-columns:130px 1fr;border-bottom:1px solid var(--hairline-soft)}
+.srow .k{
+  font-family:var(--cond);text-transform:uppercase;letter-spacing:.11em;font-size:.72rem;
+  color:var(--ink-300);padding:8px 12px;background:var(--graphite-850);border-right:1px solid var(--hairline-soft);
+}
+.srow .v{font-family:var(--mono);font-size:.9rem;color:var(--ink-100);padding:8px 12px;font-weight:500;
+  overflow-wrap:anywhere}
+.empty{color:var(--ink-500);font-size:.82rem;text-align:center;padding:26px 10px;
+  border:1px dashed var(--hairline);font-family:var(--mono)}
+
+/* ---------- Fuel economy label (echoes EPA fuel-econ box) ---------- */
+.fuel{margin-top:16px;border:2px solid var(--signal);display:grid;grid-template-columns:auto 1fr}
+.fuel .big{
+  background:var(--signal);color:var(--graphite-900);padding:12px 18px;text-align:center;
+  display:flex;flex-direction:column;justify-content:center;min-width:118px;
+}
+.fuel .big .n{font-family:var(--cond);font-weight:700;font-size:2.9rem;line-height:.85}
+.fuel .big .u{font-family:var(--cond);text-transform:uppercase;letter-spacing:.14em;font-size:.66rem;font-weight:600}
+.fuel .side{padding:10px 14px;display:flex;flex-direction:column;justify-content:center;gap:3px}
+.fuel .side .lbl{font-family:var(--cond);text-transform:uppercase;letter-spacing:.12em;font-size:.66rem;color:var(--ink-300)}
+.fuel .side .cost{font-family:var(--cond);font-weight:700;font-size:1.5rem;line-height:1;color:var(--ink-100)}
+.fuel .side .meta{font-family:var(--mono);font-size:.72rem;color:var(--ink-500)}
+.fuel.na{border-color:var(--hairline);grid-template-columns:1fr}
+.fuel.na .side{padding:12px 14px}
+.fuel.na .side .lbl{color:var(--ink-500)}
+.assume{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;
+  font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:.7rem;color:var(--ink-500);
+}
+.assume input[type=number]{
+  width:70px;flex:0 0 70px;background:var(--graphite-700);border:1px solid var(--hairline);color:var(--ink-100);
+  font-family:var(--mono);font-size:.82rem;padding:4px 6px;text-align:right;
+}
+.assume .lead{color:var(--signal)}
+
+/* ---------- Manual form ---------- */
+.form{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--hairline)}
+.fcell{padding:9px 12px;border:0.5px solid var(--hairline-soft)}
+.fcell.full{grid-column:1 / -1}
+label{display:block;font-family:var(--cond);text-transform:uppercase;letter-spacing:.11em;
+  font-size:.68rem;color:var(--ink-300);margin-bottom:4px}
+label .opt{color:var(--ink-500);letter-spacing:.05em}
+input[type=text],input[type=number],textarea,select{
+  width:100%;font-family:var(--mono);font-size:.88rem;padding:7px 9px;
+  background:var(--graphite-700);border:1px solid var(--hairline);color:var(--ink-100);
+}
+input::placeholder,textarea::placeholder{color:var(--ink-500)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--signal)}
+textarea{resize:vertical;min-height:56px;line-height:1.5}
+.prefix{position:relative}
+.prefix .sym{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--ink-500);font-family:var(--mono);font-size:.86rem}
+.prefix input{padding-left:22px}
+
+/* ---------- Generated listing ---------- */
+.listing-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:0}
+.tools{margin-left:auto;display:flex;gap:8px}
+select.tool{
+  font-family:var(--cond);text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;
+  background:var(--graphite-700);border:1px solid var(--hairline);color:var(--ink-300);padding:6px 8px;
+}
+.btn-copy{background:var(--graphite-700);color:var(--signal);border:1px solid var(--signal-dim);
+  padding:6px 14px;font-size:.78rem;display:inline-flex;align-items:center;gap:6px}
+.btn-copy:hover:not(:disabled){background:var(--signal);color:var(--graphite-900)}
+.readout-lbl{font-family:var(--cond);text-transform:uppercase;letter-spacing:.12em;font-size:.66rem;
+  color:var(--ink-500);margin:14px 0 5px}
+#titleOut{font-family:var(--mono);font-weight:600;font-size:.98rem;color:var(--signal);
+  border:1px solid var(--hairline);border-left:3px solid var(--signal);padding:10px 12px;background:var(--graphite-850);overflow-wrap:anywhere}
+#listingOut{
+  white-space:pre-wrap;font-family:var(--mono);font-size:.86rem;color:var(--ink-100);line-height:1.66;
+  border:1px solid var(--hairline);padding:14px 16px;min-height:96px;background:var(--graphite-850);
+}
+
+/* ---------- Comparison table ---------- */
+.cmp-vin{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2px}
+@media(max-width:560px){.cmp-vin{grid-template-columns:1fr}}
+.cmp-note{font-family:var(--mono);font-size:.72rem;color:var(--ink-500);margin:10px 0 0}
+.cmp{width:100%;border-collapse:collapse;margin-top:14px;table-layout:fixed}
+.cmp col.k{width:120px}
+.cmp th,.cmp td{border:1px solid var(--hairline-soft);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.cmp thead th{
+  font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:.74rem;
+  background:var(--graphite-850);color:var(--ink-100);border-bottom:1px solid var(--hairline);
+}
+.cmp thead th.klabel{color:var(--ink-500)}
+.cmp td.k{font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:.7rem;
+  color:var(--ink-300);background:var(--graphite-850)}
+.cmp td.val{font-family:var(--mono);font-size:.85rem;color:var(--ink-100)}
+.cmp td.val.win{color:var(--signal);font-weight:600}
+.cmp td.val.diff{border-left:2px solid var(--signal-dim)}
+.cmp-empty{color:var(--ink-500);font-size:.8rem;font-family:var(--mono);padding:8px 0 0}
+
+.spacer{height:14px}
+.footer{max-width:880px;margin:0 auto;padding:20px 16px 50px;color:var(--ink-500);font-size:.72rem;
+  text-align:center;font-family:var(--mono);line-height:1.6}
+.footer a{color:var(--ink-300)}
+.toast{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(16px);
+  background:var(--signal);color:var(--graphite-900);padding:9px 18px;font-family:var(--cond);
+  text-transform:uppercase;letter-spacing:.1em;font-size:.8rem;font-weight:600;
+  border:1px solid var(--graphite-900);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:50;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:600px){
+  .masthead h1{font-size:2.2rem}
+  .masthead .stamp{border-left:none;padding-left:0}
+  .form{grid-template-columns:1fr}
+  .srow{grid-template-columns:104px 1fr}
+}
