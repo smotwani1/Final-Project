@@ -93,16 +93,18 @@ All calls are `GET`-only.
 ## 🗂 Project structure
 
 ```
-index.html      — the entire app (HTML + CSS + JS, no build step)
+index.html      — markup / page structure
+style.css       — all styling (window-sticker theme)
+script.js       — all app logic (VIN decode, fuel, comparison, listing)
 README.md       — this file
 PROPOSAL.md     — project proposal
-WEEKLY_LOG.md   — weekly progress log with AI-collaboration notes
+PRD.md          — product requirements document
 ```
 
 ## 🛠 Tech
 
-Plain HTML, CSS, and vanilla JavaScript. No framework, no dependencies, no build
-tooling. Deploys to GitHub Pages as-is.
+Plain HTML, CSS, and vanilla JavaScript in three separate files — no framework, no
+dependencies, no build tooling. Deploys to GitHub Pages as-is.
 
 ## 🌐 Deploying to GitHub Pages
 
